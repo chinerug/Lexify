@@ -1,0 +1,131 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Фразы в категории: {{ category.name }}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+</head>
+<body class="bg-gray-900 font-sans text-gray-100">
+    <!-- Навбар -->
+    <nav class="bg-gray-800 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- Логотип или название сайта -->
+            <a href="" class="text-white text-xl font-bold">Lexify</a>
+
+            <!-- Кнопка для мобильного меню -->
+            <button id="mobile-menu-button" class="text-white lg:hidden focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+
+            <!-- Основное меню -->
+            <div class="hidden lg:flex lg:items-center lg:space-x-6" id="navbar-menu">
+                <a href="" class="text-white hover:text-gray-300">Главная</a>
+                <a href="{% url 'dictionary_language_list' %}" class="text-white hover:text-gray-300">Словарь</a>
+                <a href="{% url 'phrasebook_language_list' %}" class="text-red-500 hover:text-red-700">Разговорник</a>
+                <a href="" class="text-white hover:text-gray-300">Грамматика</a>
+                <a href="{% url 'library_language_list' %}" class="text-white hover:text-gray-300">Книги</a>
+                <a href="" class="text-white hover:text-gray-300">Ресурсы</a>
+            </div>
+        </div>
+
+        <!-- Мобильное меню -->
+        <div class="lg:hidden hidden bg-gray-800 mt-4 rounded-lg shadow-lg" id="mobile-menu">
+            <div class="px-4 py-6 space-y-4">
+                <a href="" class="block text-white text-lg hover:text-gray-300">Главная</a>
+                <a href="{% url 'dictionary_language_list' %}" class="block text-white text-lg hover:text-gray-300">Словарь</a>
+                <a href="{% url 'phrasebook_language_list' %}" class="block text-red-500 text-lg hover:text-red-700">Разговорник</a>
+                <a href="" class="block text-white text-lg hover:text-gray-300">Грамматика</a>
+                <a href="{% url 'library_language_list' %}" class="block text-white text-lg hover:text-gray-300">Книги</a>
+                <a href="" class="block text-white text-lg hover:text-gray-300">Ресурсы</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Основной контент -->
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">Фразы в категории: {{ category.name }} ({{ language.name }})</h1>
+
+        <!-- Контейнер для результатов поиска -->
+        <div id="wordList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-12"> <!-- Добавлен mb-12 -->
+            {% for phrase, translation in phrase_translations_page %}
+                <div class="word-item bg-gray-800 rounded-lg shadow-lg overflow-hidden relative">
+                    <!-- Контейнер для текста и иконки -->
+                    <div class="flex flex-row">
+                        <!-- Слово -->
+                        <div class="w-1/2 p-8 text-center">
+                            <p class="phrase-text text-xl font-semibold">{{ phrase.text }}</p>
+                        </div>
+
+                        <!-- Перевод -->
+                        <div class="w-1/2 p-8 bg-gray-700 text-center">
+                            <p class="translation-text text-xl font-semibold">
+                                {% if translation and translation.text %}
+                                    {{ translation.text }}
+                                {% else %}
+                                    Нет перевода
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Иконка volume -->
+                    {% if translation and translation.audio %}
+                        <button onclick="playAudio('{{ translation.audio.url }}')" class="absolute inset-0 flex items-center justify-center w-10 h-10 rounded-full shadow-md bg-gray-600 hover:bg-gray-500 transition duration-300 mx-auto my-auto">
+                            <img src="{% static 'images/volume.png' %}" alt="Volume Icon" class="w-8 h-8">
+                        </button>
+                    {% else %}
+                        <div>
+
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Пагинация -->
+        <div class="flex justify-center mt-8 mb-8"> <!-- Добавлен mb-8 -->
+            <nav class="inline-flex rounded-md shadow-sm">
+                {% if phrase_translations_page.has_previous %}
+                    <a href="?page={{ phrase_translations_page.previous_page_number }}" class="px-4 py-2 bg-gray-700 text-white font-semibold rounded-l-lg hover:bg-gray-600 transition duration-300">
+                        Назад
+                    </a>
+                {% endif %}
+
+                <span class="px-4 py-2 bg-gray-700 text-white font-semibold">
+                    Страница {{ phrase_translations_page.number }} из {{ phrase_translations_page.paginator.num_pages }}
+                </span>
+
+                {% if phrase_translations_page.has_next %}
+                    <a href="?page={{ phrase_translations_page.next_page_number }}" class="px-4 py-2 bg-gray-700 text-white font-semibold rounded-r-lg hover:bg-gray-600 transition duration-300">
+                        Вперед
+                    </a>
+                {% endif %}
+            </nav>
+        </div>
+    </div>
+
+    <script>
+        // Скрипт для открытия/закрытия мобильного меню
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            var mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.remove('hidden');
+            } else {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+    </script>
+
+    <!-- Скрипт для воспроизведения аудио -->
+    <script>
+        function playAudio(audioUrl) {
+            const audio = new Audio(audioUrl);
+            audio.play();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+{
+  "name": "lexify",
+  "version": "1.0.0",
+  "description": "Language learning application",
+  "keywords": [
+    "Lexify",
+    "Russia",
+    "Lezgian",
+    "Chechen",
+    "Ingush",
+    "Tatar",
+    "Bashkirian",
+    "Avarian"
+  ],
+  "homepage": "https://github.com/chinerug/Lexify#readme",
+  "bugs": {
+    "url": "https://github.com/chinerug/Lexify/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chinerug/Lexify.git"
+  },
+  "license": "ISC",
+  "author": "Marat Magomedov",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tailwindcss -i ./static/src/styles.css -o ./static/css/styles.css",
+    "watch": "tailwindcss -i ./static/src/styles.css -o ./static/css/styles.css --watch"
+  },
+  "dependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.1",
+    "tailwindcss": "^3.4.17"
+  }
+}

@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Языки разговорников</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+</head>
+<body class="bg-gray-900 font-sans text-gray-100">
+    <!-- Навбар -->
+    <nav class="bg-gray-800 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- Логотип или название сайта -->
+            <a href="" class="text-white text-xl font-bold">Lexify</a>
+
+            <!-- Кнопка для мобильного меню -->
+            <button id="mobile-menu-button" class="text-white lg:hidden focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+
+            <!-- Основное меню -->
+            <div class="hidden lg:flex lg:items-center lg:space-x-6" id="navbar-menu">
+                <a href="" class="text-white hover:text-gray-300">Главная</a>
+                <a href="{% url 'dictionary_language_list' %}" class="text-white hover:text-gray-300">Словарь</a>
+                <a href="{% url 'phrasebook_language_list' %}" class="text-red-500 hover:text-red-700">Разговорник</a>
+                <a href="" class="text-white hover:text-gray-300">Грамматика</a>
+                <a href="{% url 'library_language_list' %}" class="text-white hover:text-gray-300">Книги</a>
+                <a href="" class="text-white hover:text-gray-300">Ресурсы</a>
+            </div>
+        </div>
+
+        <!-- Мобильное меню -->
+        <div class="lg:hidden hidden bg-gray-800 mt-4 rounded-lg shadow-lg" id="mobile-menu">
+            <div class="px-4 py-6 space-y-4">
+                <a href="" class="block text-white text-lg hover:text-gray-300">Главная</a>
+                <a href="{% url 'dictionary_language_list' %}" class="block text-white text-lg hover:text-gray-300">Словарь</a>
+                <a href="{% url 'phrasebook_language_list' %}" class="block text-red-500 text-lg hover:text-red-700">Разговорник</a>
+                <a href="" class="block text-white text-lg hover:text-gray-300">Грамматика</a>
+                <a href="{% url 'library_language_list' %}" class="block text-white text-lg hover:text-gray-300">Книги</a>
+                <a href="" class="block text-white text-lg hover:text-gray-300">Ресурсы</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Основной контент -->
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">Доступные языки разговорников</h1>
+
+        <div class="max-w-lg mx-auto mb-8">
+            <input type="text" id="searchInput" placeholder="Поиск по языкам..."
+                   class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {% for language in languages %}
+                <div class="language-item bg-gray-800 rounded-lg shadow-lg overflow-hidden transform transition-transform duration-300 hover:scale-105">
+                    <!-- Область с флагом и текстом -->
+                    <div class="p-4">
+                        <div class="mt-4 relative h-40 w-full overflow-hidden flex justify-center items-center">
+                            <img src="{{ language.flag.url }}" alt="Flag" class="w-60 h-40 object-cover rounded-lg">
+                        </div>
+
+                        <div class="language-text p-4 text-center">
+                            <p class="text-xl font-semibold">{{ language.name }}</p>
+                        </div> 
+                    </div>
+
+                    <div class="p-4 bg-gray-700 border-t border-gray-600">
+                        <form action="{% url 'phrasebook_category_list' language.id %}" method="get" class="text-center">
+                            <button type="submit" class="px-4 py-2 bg-gray-900 text-white font-semibold rounded-lg hover:bg-gray-950 transition duration-300">
+                                Подробнее
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+    // Скрипт для открытия/закрытия мобильного меню с анимацией
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            var mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.remove('hidden');
+            } else {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+    </script>
+
+    <script>
+        document.getElementById('searchInput').addEventListener('input', function () {
+            const searchQuery = this.value.trim().toLowerCase(); // Получаем значение поиска
+            const languageItems = document.querySelectorAll('.language-item'); // Все элементы списка
+
+            languageItems.forEach(item => {
+                const languageText = item.querySelector('.language-text').textContent.toLowerCase();
+
+                // Показываем элемент, если он соответствует поисковому запросу
+                if (languageText.includes(searchQuery)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
