@@ -1,0 +1,145 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <title>Lexify - Главная</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    <!-- Подключение Swiper для карусели -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+</head>
+<body class="bg-gray-900 font-sans text-gray-100">
+    <nav class="bg-gray-800 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- Логотип или название сайта -->
+            <a href="" class="text-white text-xl font-bold">Lexify</a>
+
+            <!-- Кнопка для мобильного меню -->
+            <button id="mobile-menu-button" class="text-white lg:hidden focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+
+            <!-- Основное меню -->
+            <div class="hidden lg:flex lg:items-center lg:space-x-6" id="navbar-menu">
+                <a href="{% url 'home_page' %}" class="text-red-500 hover:text-red-700">Главная</a>
+                <a href="{% url 'dictionary_language_list' %}" class="text-white hover:text-gray-300">Словарь</a>
+                <a href="{% url 'phrasebook_language_list' %}" class="text-white hover:text-gray-300">Разговорник</a>
+                <a href="" class="text-white hover:text-gray-300">Грамматика</a>
+                <a href="{% url 'library_language_list' %}" class="text-white hover:text-gray-300">Книги</a>
+            </div>
+        </div>
+
+        <!-- Мобильное меню -->
+        <div class="lg:hidden hidden bg-gray-800 mt-4 rounded-lg shadow-lg" id="mobile-menu">
+            <div class="px-4 py-6 space-y-4">
+                <a href="{% url 'home_page' %}" class="block text-red-500 text-lg hover:text-red-700">Главная</a>
+                <a href="{% url 'dictionary_language_list' %}" class="block text-white text-lg hover:text-gray-300">Словарь</a>
+                <a href="{% url 'phrasebook_language_list' %}" class="block text-white text-lg hover:text-gray-300">Разговорник</a>
+                <a href="" class="block text-white text-lg hover:text-gray-300">Грамматика</a>
+                <a href="{% url 'library_language_list' %}" class="block text-white text-lg hover:text-gray-300">Книги</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Видео фон -->
+    <div class="relative h-screen overflow-hidden">
+        <video autoplay muted loop class="absolute inset-0 w-full h-full object-cover">
+            <source src="{% static 'videos/background.mp4' %}" type="video/mp4">
+            Ваш браузер не поддерживает видео.
+        </video>
+        <!-- Затемнение видео -->
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <!-- Текст поверх видео -->
+        <div class="absolute inset-0 flex flex-col justify-center items-center text-center">
+            <h1 class="text-6xl font-bold text-white mb-4">Lexify</h1>
+            <p class="text-xl text-gray-300">Изучайте языки народов России с нами</p>
+        </div>
+    </div>
+
+    <!-- Карусель с флагами -->
+    <div class="py-16 bg-gray-900">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+                {% for language in languages %}
+                    <div class="swiper-slide">
+                        <div class="flex justify-center items-center">
+                            <img src="{{ language.flag.url }}" alt="{{ language.name }}" class="w-40 h-24 object-cover rounded-lg opacity-50">
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Ссылки на ресурсы -->
+    <div class="container mx-auto px-4 py-8">
+        <h2 class="text-2xl font-bold text-center mb-4">Полезные ресурсы</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {% for link in links %}
+                <div class="bg-gray-800 rounded-lg shadow-lg p-4 transform transition-transform duration-300 hover:scale-105">
+                    <a href="{{ link.link }}" target="_blank" class="text-blue-400 hover:text-blue-600">
+                        {{ link.name }}
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Подключение Swiper JS -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        // Инициализация Swiper
+        const swiper = new Swiper('.swiper-container', {
+            loop: true,
+            centeredSlides: true,
+            slidesPerView: 'auto',
+            spaceBetween: 20,
+            effect: 'coverflow',
+            coverflowEffect: {
+                rotate: 0,
+                stretch: 0,
+                depth: 100,
+                modifier: 2,
+                slideShadows: false,
+            },
+            on: {
+                init: function () {
+                    // Устанавливаем активный слайд как центральный
+                    const slides = this.slides;
+                    slides[this.activeIndex].querySelector('img').classList.remove('opacity-50');
+                    slides[this.activeIndex].querySelector('img').classList.add('w-60', 'h-36');
+                },
+                slideChange: function () {
+                    // Обновляем стили для активного и неактивных слайдов
+                    const slides = this.slides;
+                    slides.forEach((slide, index) => {
+                        const img = slide.querySelector('img');
+                        if (index === this.activeIndex) {
+                            img.classList.remove('opacity-50');
+                            img.classList.add('w-60', 'h-36');
+                        } else {
+                            img.classList.add('opacity-50');
+                            img.classList.remove('w-60', 'h-36');
+                        }
+                    });
+                },
+            },
+        });
+    </script>
+
+    <script>
+        // Скрипт для открытия/закрытия мобильного меню с анимацией
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.remove('hidden');
+            } else {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

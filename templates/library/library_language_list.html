@@ -23,24 +23,22 @@
 
             <!-- Основное меню -->
             <div class="hidden lg:flex lg:items-center lg:space-x-6" id="navbar-menu">
-                <a href="" class="text-white hover:text-gray-300">Главная</a>
+                <a href="{% url 'home_page' %}" class="text-white hover:text-gray-300">Главная</a>
                 <a href="{% url 'dictionary_language_list' %}" class="text-white hover:text-gray-300">Словарь</a>
                 <a href="{% url 'phrasebook_language_list' %}" class="text-white hover:text-gray-300">Разговорник</a>
                 <a href="" class="text-white hover:text-gray-300">Грамматика</a>
                 <a href="{% url 'library_language_list' %}" class="text-red-500 hover:text-red-700">Книги</a>
-                <a href="" class="text-white hover:text-gray-300">Ресурсы</a>
             </div>
         </div>
 
         <!-- Мобильное меню -->
         <div class="lg:hidden hidden bg-gray-800 mt-4 rounded-lg shadow-lg" id="mobile-menu">
             <div class="px-4 py-6 space-y-4">
-                <a href="" class="block text-white text-lg hover:text-gray-300">Главная</a>
+                <a href="{% url 'home_page' %}" class="block text-white text-lg hover:text-gray-300">Главная</a>
                 <a href="{% url 'dictionary_language_list' %}" class="block text-white text-lg hover:text-gray-300">Словарь</a>
                 <a href="{% url 'phrasebook_language_list' %}" class="block text-white text-lg hover:text-gray-300">Разговорник</a>
                 <a href="" class="block text-white text-lg hover:text-gray-300">Грамматика</a>
                 <a href="{% url 'library_language_list' %}" class="block text-red-500 text-lg hover:text-red-700">Книги</a>
-                <a href="" class="block text-white text-lg hover:text-gray-300">Ресурсы</a>
             </div>
         </div>
     </nav>
